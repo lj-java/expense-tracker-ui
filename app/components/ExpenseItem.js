@@ -1,7 +1,7 @@
 import { Trash2 } from "lucide-react"
 import { formatCurrency } from "../utils/formatCurrency"
 
-const ExpenseItem = ({expense}) => {
+const ExpenseItem = ({expense, handleDelete}) => {
   return (
     <div className='flex items-center justify-between bg-gray-100 p-4 rounded-xl shadow-lg text-black' key={expense.name}>
       <div className='flex flex-col gap-2'>
@@ -11,7 +11,7 @@ const ExpenseItem = ({expense}) => {
           <p className='text-gray-400'>{expense.date}</p>
         </div>
       </div>
-      <button>
+      <button role="delete-button" onClick={() => handleDelete(expense.id)}>
         <Trash2 className='w-5 text-red-500 hover:text-red-700'/>
       </button>
     </div>

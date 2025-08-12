@@ -23,7 +23,6 @@ export default function Home() {
     setTotalExpenses(total)
   }, [expenses])
 
-
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
@@ -53,7 +52,22 @@ export default function Home() {
     }
   }
 
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/${id}`, {
+        method: 'DELETE',
+      })
+      if (!response.ok) {
+        throw new Error('Failed to delete expense')
+      }
+      const data = await response.json()
+      setExpenses(expenses.filter(expense => expense.id !== id))
+    } catch (error) {
+      console.log('Error deleting expense:', error)
+    }
+  }
+
   return (
-    <ExpenseTracker expenses={expenses} onSubmit={handleSubmit} formError={formError} totalExpenses={totalExpenses} />
+    <ExpenseTracker expenses={expenses} onSubmit={handleSubmit} formError={formError} totalExpenses={totalExpenses} handleDelete={handleDelete} />
   )
 }
