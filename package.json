@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest"
   },
   "dependencies": {
     "lucide-react": "^0.539.0",
@@ -17,10 +18,14 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/react": "^16.3.0",
     "@types/node": "24.2.1",
     "@types/react": "19.1.9",
     "eslint": "^9",
     "eslint-config-next": "15.4.6",
+    "jest": "^30.0.5",
+    "jest-environment-jsdom": "^30.0.5",
     "tailwindcss": "^4"
   }
 }
