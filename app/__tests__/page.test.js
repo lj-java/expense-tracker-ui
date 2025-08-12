@@ -1,6 +1,6 @@
 process.env.NEXT_PUBLIC_API_BASE_URL = "http://localhost/api/expenses"
 
-import { render, screen, waitFor, fireEvent } from "@testing-library/react"
+import { render, screen, waitFor, fireEvent, within } from "@testing-library/react"
 import Home from "../page"
 import { formatCurrency } from "../utils/formatCurrency"
 
@@ -10,7 +10,8 @@ beforeEach(() => {
     .mockImplementationOnce(() => Promise.resolve({
       ok: true,
       json: () => Promise.resolve([
-        { name: 'Coffee', amount: '100', date: '2025-08-11' }
+        { name: 'Coffee', amount: '100', date: '2025-08-11' },
+        { name: 'Lunch', amount: '200', date: '2025-08-12' },
       ])
     }))
     // mock the second call to fetch: POST for adding an expense
@@ -75,9 +76,51 @@ describe('page', () => {
     })
 
     // Assert the correct total expenses is displayed
-    const expectedTotalExpenses = 5000 + 100
+    const expectedTotalExpenses = 5000 + 100 + 200
     await waitFor(() => {
       expect(screen.getByText(formatCurrency(expectedTotalExpenses))).toBeInTheDocument()
+    })
+  })
+
+  it('deletes an expense and updates the total expenses', async () => {
+    global.fetch = jest.fn()
+      // Initial GET
+      .mockImplementationOnce(() => Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve([
+          { id: 1, name: 'Coffee', amount: '100', date: '2025-08-11' },
+          { id: 2, name: 'Lunch', amount: '200', date: '2025-08-12' }
+        ])
+      }))
+      // DELETE
+      .mockImplementationOnce(() => Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({})
+      }))
+
+    render(<Home />)
+
+    // Wait for initial GET to finish and Coffee to appear
+    await waitFor(() => {
+      expect(screen.getByText("Coffee")).toBeInTheDocument()
+      expect(screen.getByText("Lunch")).toBeInTheDocument()
+    })
+    
+
+    // Delete the first expense - Coffee
+    fireEvent.click(screen.getAllByRole('delete-button')[0])
+    const confirmModal = screen.getByTestId('confirm-modal')
+    fireEvent.click(within(confirmModal).getByText('Yes'))
+
+    // Wait for DELETE to finish and Coffee to disappear
+    await waitFor(() => {
+      expect(screen.queryByText('Coffee')).not.toBeInTheDocument()
+      expect(screen.getByText('Lunch')).toBeInTheDocument()
+    })
+
+    // Assert the correct total expenses is displayed
+    await waitFor(() => {
+      expect(screen.getByText(formatCurrency(200))).toBeInTheDocument()
     })
   })
 })
