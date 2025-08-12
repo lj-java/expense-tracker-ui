@@ -1,4 +1,5 @@
 import { Trash2 } from "lucide-react"
+import { formatCurrency } from "../utils/formatCurrency"
 
 const ExpenseItem = ({expense}) => {
   return (
@@ -6,7 +7,7 @@ const ExpenseItem = ({expense}) => {
       <div className='flex flex-col gap-2'>
         <p className='font-bold'>{expense.name}</p>
         <div className='flex gap-2'>
-          <p>PHP {expense.amount}</p>
+          <p>{formatCurrency(expense.amount)}</p>
           <p className='text-gray-400'>{expense.date}</p>
         </div>
       </div>

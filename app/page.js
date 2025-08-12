@@ -8,6 +8,7 @@ export default function Home() {
 
   const [expenses, setExpenses] = useState([])
   const [formError, setFormError] = useState('')
+  const [totalExpenses, setTotalExpenses] = useState(0)
 
   useEffect(() => {
     fetch(API_BASE_URL)
@@ -15,6 +16,13 @@ export default function Home() {
     .then(data => setExpenses(data))
     .catch(err => console.log('Error fetching expenses:', err))
   }, [])
+
+
+  useEffect(() => {
+    const total = expenses.reduce((acc, expense) => acc + Number(expense.amount), 0)
+    setTotalExpenses(total)
+  }, [expenses])
+
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -46,6 +54,6 @@ export default function Home() {
   }
 
   return (
-    <ExpenseTracker expenses={expenses} onSubmit={handleSubmit} formError={formError} />
+    <ExpenseTracker expenses={expenses} onSubmit={handleSubmit} formError={formError} totalExpenses={totalExpenses} />
   )
 }
