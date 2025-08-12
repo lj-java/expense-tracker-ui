@@ -2,6 +2,7 @@ process.env.NEXT_PUBLIC_API_BASE_URL = "http://localhost/api/expenses"
 
 import { render, screen, waitFor, fireEvent } from "@testing-library/react"
 import Home from "../page"
+import { formatCurrency } from "../utils/formatCurrency"
 
 beforeEach(() => {
   global.fetch = jest.fn()
@@ -71,6 +72,12 @@ describe('page', () => {
     // Wait for the new expense to appear in the UI
     await waitFor(() => {
       expect(screen.getByText('Grocery')).toBeInTheDocument()
+    })
+
+    // Assert the correct total expenses is displayed
+    const expectedTotalExpenses = 5000 + 100
+    await waitFor(() => {
+      expect(screen.getByText(formatCurrency(expectedTotalExpenses))).toBeInTheDocument()
     })
   })
 })
