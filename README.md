@@ -59,3 +59,29 @@ This project uses Jest and React Testing Library for unit testing.
   ```bash
   npm run test
   ```
+
+## Deployment
+
+### Frontend
+
+This app is deployed on [Vercel](https://vercel.com).
+
+- Every push to the main branch will trigger a deployment.
+
+Production URL example:  
+[`https://expense-tracker-henna-five-53.vercel.app/`](https://expense-tracker-henna-five-53.vercel.app/)
+
+
+### Backend (Rails API)
+
+The Rails API is deployed on [Render](https://render.com/):
+
+- The API endpoint URL should be set in the frontend `.env` as `NEXT_PUBLIC_API_BASE_URL`.
+- Make sure CORS is configured on your Rails API to allow requests from your Vercel frontend.
+
+Production URL example:  
+[`https://expense-tracker-api-njls.onrender.com/api/expenses`](https://expense-tracker-api-njls.onrender.com/api/expenses)
+
+#### Environment Variables
+
+- Set `NEXT_PUBLIC_API_BASE_URL` in your Vercel project settings to point to your Render API endpoint.
