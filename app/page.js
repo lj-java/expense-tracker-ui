@@ -44,7 +44,11 @@ export default function Home() {
       }
 
       const data = await response.json()
-      setExpenses([...expenses, data])
+      setExpenses(
+        [...expenses, data].sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        )
+      )
 
       event.target.reset()
     } catch (error) {
