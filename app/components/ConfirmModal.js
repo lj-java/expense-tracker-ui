@@ -4,7 +4,7 @@ const ConfirmModal = ({onConfirm, onClose, expense}) => {
   return (
     <div data-testid="confirm-modal" className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black opacity-50"></div>
-      <div className="relative z-10 bg-white p-6 rounded-lg shadow-lg text-black gap-4 flex flex-col">
+      <div className="relative z-10 bg-white p-6 rounded-lg shadow-lg gap-4 flex flex-col">
           <p>Are you sure you want to delete this expense?</p>
           <p><strong>{expense.name}</strong></p>
           <p><i>{formatCurrency(expense.amount)} | {expense.date}</i></p>

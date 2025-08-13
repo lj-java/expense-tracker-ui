@@ -3,7 +3,7 @@ import { formatCurrency } from "../utils/formatCurrency"
 
 const ExpenseItem = ({expense, handleDelete}) => {
   return (
-    <div className='flex items-center justify-between bg-gray-100 p-4 rounded-xl shadow-lg text-black' key={expense.name}>
+    <div className='flex items-center justify-between bg-gray-100 p-4 rounded-xl shadow-lg' key={expense.name}>
       <div className='flex flex-col gap-2'>
         <p className='font-bold'>{expense.name}</p>
         <div className='flex gap-2'>

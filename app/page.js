@@ -10,18 +10,26 @@ export default function Home() {
   const [formError, setFormError] = useState('')
   const [totalExpenses, setTotalExpenses] = useState(0)
 
-  useEffect(() => {
-    fetch(API_BASE_URL)
-    .then(res => res.json())
-    .then(data => setExpenses(data))
-    .catch(err => console.log('Error fetching expenses:', err))
-  }, [])
+  const now = new Date()
+  const [selectedMonth, setSelectedMonth] = useState(String(now.getMonth() + 1))
+  const [selectedYear, setSelectedYear] = useState(String(now.getFullYear()))
 
+  const fetchExpenses = async () => {
+    const params = new URLSearchParams()
+
+    if (selectedMonth) params.append('month', selectedMonth)
+    if (selectedYear) params.append('year', selectedYear)
+
+    const res = await fetch(`${API_BASE_URL}?${params.toString()}`)
+    const data = await res.json()
+
+    setExpenses(data.expenses)
+    setTotalExpenses(data.total)
+  }
 
   useEffect(() => {
-    const total = expenses.reduce((acc, expense) => acc + Number(expense.amount), 0)
-    setTotalExpenses(total)
-  }, [expenses])
+    fetchExpenses()
+  }, [selectedMonth, selectedYear])
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -43,12 +51,7 @@ export default function Home() {
         throw new Error('Failed to add expense')
       }
 
-      const data = await response.json()
-      setExpenses(
-        [...expenses, data].sort(
-          (a, b) => new Date(b.date) - new Date(a.date)
-        )
-      )
+      await fetchExpenses()
 
       event.target.reset()
     } catch (error) {
@@ -64,7 +67,6 @@ export default function Home() {
       if (!response.ok) {
         throw new Error('Failed to delete expense')
       }
-      const data = await response.json()
       setExpenses(expenses.filter(expense => expense.id !== id))
     } catch (error) {
       console.log('Error deleting expense:', error)
@@ -72,6 +74,6 @@ export default function Home() {
   }
 
   return (
-    <ExpenseTracker expenses={expenses} onSubmit={handleSubmit} formError={formError} totalExpenses={totalExpenses} handleDelete={handleDelete} />
+    <ExpenseTracker expenses={expenses} onSubmit={handleSubmit} formError={formError} totalExpenses={totalExpenses} handleDelete={handleDelete} selectedMonth={selectedMonth} selectedYear={selectedYear} setSelectedMonth={setSelectedMonth} setSelectedYear={setSelectedYear} />
   )
 }

@@ -12,7 +12,7 @@ const AddExpenseForm = ({onSubmit, formError={}}) => {
   const today = new Date().toISOString().split('T')[0]
 
   return (
-    <div className='flex flex-col p-6 gap-4 text-black bg-gray-200 rounded-xl shadow-xl'>
+    <div className='flex flex-col p-6 gap-4 bg-gray-200 rounded-xl shadow-xl'>
       <p className='font-bold text-xl'>Add Expense</p>
 
       <form data-testid="expense-form" className='flex flex-col gap-2' onSubmit={onSubmit}>
