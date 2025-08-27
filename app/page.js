@@ -1,6 +1,7 @@
 "use client"
 
 import ExpenseTracker from "./components/ExpenseTracker"
+import Toast from "./components/Toast"
 import { useEffect, useState } from "react"
 
 export default function Home() {
@@ -10,10 +11,19 @@ export default function Home() {
   const [formError, setFormError] = useState({})
   const [totalExpenses, setTotalExpenses] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' })
 
   const now = new Date()
   const [selectedMonth, setSelectedMonth] = useState(String(now.getMonth() + 1))
   const [selectedYear, setSelectedYear] = useState(String(now.getFullYear()))
+
+  const showToast = (message, type = 'success') => {
+    setToast({ isVisible: true, message, type })
+  }
+
+  const hideToast = () => {
+    setToast({ ...toast, isVisible: false })
+  }
 
   const fetchExpenses = async () => {
     try {
@@ -61,10 +71,12 @@ export default function Home() {
 
       await fetchExpenses()
       setFormError({})
+      showToast('Expense added successfully! ')
 
       event.target.reset()
     } catch (error) {
       console.log('Error adding expense:', error)
+      showToast('Failed to add expense. Please try again.', 'error')
     }
   }
 
@@ -77,14 +89,22 @@ export default function Home() {
         throw new Error('Failed to delete expense')
       }
       await fetchExpenses()
+      showToast('Expense deleted successfully!')
     } catch (error) {
       console.log('Error deleting expense:', error)
+      showToast('Failed to delete expense. Please try again.', 'error')
     }
   }
 
   return (
     <div className='p-4 sm:p-8 lg:p-12 min-h-screen flex items-center justify-center'>
       <ExpenseTracker expenses={expenses} onSubmit={handleSubmit} formError={formError} totalExpenses={totalExpenses} handleDelete={handleDelete} selectedMonth={selectedMonth} selectedYear={selectedYear} setSelectedMonth={setSelectedMonth} setSelectedYear={setSelectedYear} isLoading={loading} />
+      <Toast 
+        message={toast.message} 
+        type={toast.type} 
+        isVisible={toast.isVisible} 
+        onClose={hideToast} 
+      />
     </div>
   )
 }
