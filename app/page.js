@@ -76,7 +76,6 @@ export default function Home() {
       event.target.reset()
     } catch (error) {
       console.log('Error adding expense:', error)
-      showToast('Failed to add expense. Please try again.', 'error')
     }
   }
 
