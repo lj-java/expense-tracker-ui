@@ -1,3 +1,7 @@
+"use client"
+
+import { useState, useEffect } from 'react'
+
 const InputField = ({name, label, type, placeholder, max, min, error}) => {
   return (
     <div className='flex flex-col'>
@@ -9,7 +13,15 @@ const InputField = ({name, label, type, placeholder, max, min, error}) => {
 }
 
 const AddExpenseForm = ({onSubmit, formError={}}) => {
-  const today = new Date().toISOString().split('T')[0]
+  const [today, setToday] = useState('')
+
+  useEffect(() => {
+    const now = new Date()
+    const year = now.getFullYear()
+    const month = String(now.getMonth() + 1).padStart(2, '0')
+    const day = String(now.getDate()).padStart(2, '0')
+    setToday(`${year}-${month}-${day}`)
+  }, [])
 
   return (
     <div className='flex flex-col p-6 gap-4 bg-gray-200 rounded-xl shadow-xl'>
@@ -17,7 +29,7 @@ const AddExpenseForm = ({onSubmit, formError={}}) => {
 
       <form data-testid="expense-form" className='flex flex-col gap-2' onSubmit={onSubmit}>
         <InputField name='name' label='Name' type='text' placeholder='e.g. Coffee' error={formError.name} />
-        <InputField name='amount' label='Amount' type='number' placeholder='e.g. 180.00' min={1} error={formError.amount && formError.amount.length > 0 ? formError.amount[0] : ''} />
+        <InputField name='amount' label='Amount' type='number' placeholder='e.g. 180.00' max={1000000} min={1} error={formError.amount && formError.amount.length > 0 ? formError.amount[0] : ''} />
         <InputField name='date' label='Date' type='date' placeholder='e.g. 2025-08-11' max={today} error={formError.date && formError.date.length > 0 ? formError.date[0] : ''} />
         <button role='add-button' type='submit' className='bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 mt-4 rounded'>Add</button>
       </form>

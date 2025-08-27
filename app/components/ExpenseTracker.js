@@ -2,15 +2,17 @@ import TotalExpensesSummary from './TotalExpensesSummary'
 import AddExpenseForm from './AddExpenseForm'
 import ExpenseList from './ExpenseList'
 
-const ExpenseTracker = ({expenses, onSubmit, formError, totalExpenses, handleDelete, selectedMonth, selectedYear, setSelectedMonth, setSelectedYear}) => {
+const ExpenseTracker = ({expenses, onSubmit, formError, totalExpenses, handleDelete, selectedMonth, selectedYear, setSelectedMonth, setSelectedYear, isLoading}) => {
   return (
-    <div className='container max-w-6xl mx-auto bg-white px-8 py-12 rounded-xl shadow-xl my-8 grid grid-cols-2 gap-8 justify-center'>
-      <div className='flex flex-col gap-6 pl-4'>
-        <TotalExpensesSummary totalExpenses={totalExpenses} />
-        <AddExpenseForm onSubmit={onSubmit} formError={formError} />
+      <div className='w-full max-w-5xl md-max-w-full lg-max-w-5xl bg-white rounded-2xl overflow-hidden shadow-xl'>
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 md:p-10'>
+          <div className='flex flex-col gap-6'>
+            <TotalExpensesSummary totalExpenses={totalExpenses} isLoading={isLoading} />
+            <AddExpenseForm onSubmit={onSubmit} formError={formError} />
+          </div>
+          <ExpenseList expenses={expenses} onDelete={handleDelete} selectedMonth={selectedMonth} selectedYear={selectedYear} setSelectedMonth={setSelectedMonth} setSelectedYear={setSelectedYear} isLoading={isLoading} />
+        </div>
       </div>
-      <ExpenseList expenses={expenses} onDelete={handleDelete} selectedMonth={selectedMonth} selectedYear={selectedYear} setSelectedMonth={setSelectedMonth} setSelectedYear={setSelectedYear} />
-    </div>
   )
 }
 

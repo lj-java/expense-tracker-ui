@@ -7,14 +7,17 @@ export default function Home() {
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
   const [expenses, setExpenses] = useState([])
-  const [formError, setFormError] = useState('')
+  const [formError, setFormError] = useState({})
   const [totalExpenses, setTotalExpenses] = useState(0)
+  const [loading, setLoading] = useState(true)
 
   const now = new Date()
   const [selectedMonth, setSelectedMonth] = useState(String(now.getMonth() + 1))
   const [selectedYear, setSelectedYear] = useState(String(now.getFullYear()))
 
   const fetchExpenses = async () => {
+    try {
+    setLoading(true)
     const params = new URLSearchParams()
 
     if (selectedMonth) params.append('month', selectedMonth)
@@ -25,6 +28,11 @@ export default function Home() {
 
     setExpenses(data.expenses)
     setTotalExpenses(data.total)
+    setLoading(false)
+    } catch (error) {
+      console.log('Error fetching expenses:', error)
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -52,6 +60,7 @@ export default function Home() {
       }
 
       await fetchExpenses()
+      setFormError({})
 
       event.target.reset()
     } catch (error) {
@@ -67,13 +76,15 @@ export default function Home() {
       if (!response.ok) {
         throw new Error('Failed to delete expense')
       }
-      setExpenses(expenses.filter(expense => expense.id !== id))
+      await fetchExpenses()
     } catch (error) {
       console.log('Error deleting expense:', error)
     }
   }
 
   return (
-    <ExpenseTracker expenses={expenses} onSubmit={handleSubmit} formError={formError} totalExpenses={totalExpenses} handleDelete={handleDelete} selectedMonth={selectedMonth} selectedYear={selectedYear} setSelectedMonth={setSelectedMonth} setSelectedYear={setSelectedYear} />
+    <div className='p-4 sm:p-8 lg:p-12 min-h-screen flex items-center justify-center'>
+      <ExpenseTracker expenses={expenses} onSubmit={handleSubmit} formError={formError} totalExpenses={totalExpenses} handleDelete={handleDelete} selectedMonth={selectedMonth} selectedYear={selectedYear} setSelectedMonth={setSelectedMonth} setSelectedYear={setSelectedYear} isLoading={loading} />
+    </div>
   )
 }

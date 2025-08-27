@@ -3,8 +3,9 @@
 import { useState } from 'react'
 import ConfirmModal from './ConfirmModal'
 import ExpenseItem from './ExpenseItem'
+import LoadingSkeleton from './LoadingSkeleton'
 
-const ExpenseList = ({expenses, onDelete, selectedMonth, selectedYear, setSelectedMonth, setSelectedYear}) => {
+const ExpenseList = ({expenses, onDelete, selectedMonth, selectedYear, setSelectedMonth, setSelectedYear, isLoading}) => {
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedExpense, setSelectedExpense] = useState(null)
 
@@ -23,14 +24,14 @@ const ExpenseList = ({expenses, onDelete, selectedMonth, selectedYear, setSelect
   }
 
   return (
-    <div className='flex flex-col gap-4 max-h-[800px] pr-4 overflow-y-auto'>
-      <div className='flex justify-between'>
+    <div className='flex flex-col gap-4 max-h-[800px] overflow-y-auto'>
+      <div className='flex justify-between md:flex-row flex-col gap-2 md:gap-0'>
         <p className='font-bold text-2xl'>Expenses</p>
-        <div className='flex flex-row gap-2 mb-2'>
+        <div className='flex flex-col sm:flex-row gap-2 w-full md:w-auto'>
           <select
             value={selectedMonth}
             onChange={e => setSelectedMonth(e.target.value)}
-            className="border rounded px-2 py-1"
+            className="border rounded px-2 py-1 text-sm w-full sm:w-auto"
           >
             <option value="all">All Months</option>
             {monthsAndYears.months.map(m => (
@@ -40,7 +41,7 @@ const ExpenseList = ({expenses, onDelete, selectedMonth, selectedYear, setSelect
           <select
             value={selectedYear}
             onChange={e => setSelectedYear(e.target.value)}
-            className="border rounded px-2 py-1"
+            className="border rounded px-2 py-1 text-sm w-full sm:w-auto"
           >
             <option value="all">All Years</option>
             {monthsAndYears.years.map(y => (
@@ -50,9 +51,11 @@ const ExpenseList = ({expenses, onDelete, selectedMonth, selectedYear, setSelect
         </div>
       </div>
       
-      <div className='flex flex-col gap-4'>
-      {expenses.length === 0 ? (
-        <div className="text-gray-500 italic">No expenses yet. Add your first expense!</div>
+      <div className='flex flex-col gap-3 sm:gap-4'>
+      {isLoading ? (
+        <LoadingSkeleton />
+      ) : expenses.length === 0 ? (
+        <div className="text-gray-500 italic text-sm sm:text-base text-center py-8">No expenses yet. Add your first expense!</div>
       ) : (
         expenses.map((expense, index) => (
           <ExpenseItem key={index} expense={expense} handleDelete={() => {setSelectedExpense(expense); setModalOpen(true)}} />
